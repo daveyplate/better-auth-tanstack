@@ -6,14 +6,12 @@ import { AuthQueryContext } from "../../lib/auth-query-provider"
 import type { AuthClient } from "../../types/auth-client"
 import { useSession } from "../session/use-session"
 
-const decodeJwt = (token: string) => {
-    const parts = token
-        .split(".")
-        .map((part) => Buffer.from(part.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString())
+export const decodeJwt = (token: string) => {
+    const parts = token.split('.').map((part) =>
+        atob(part.replace(/-/g, '+').replace(/_/g, '/'))
+    )
 
-    const payload = JSON.parse(parts[1])
-
-    return payload
+    return JSON.parse(parts[1]);
 }
 
 export function useToken<TAuthClient extends AuthClient>(
